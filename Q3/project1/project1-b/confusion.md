@@ -11,7 +11,7 @@
 |:------|:------:|:------:|-------:|
 |       |        |Positive|Negative|
 |truth  |Positive|TP      |FN      |
-|^      |Negative|FP      |TN      |
+|       |Negative|FP      |TN      |
 
 上記の混同行列をもとに、以下にPrecision,Recall,F値,IoUの式と意味を示す。
 ## Precision
