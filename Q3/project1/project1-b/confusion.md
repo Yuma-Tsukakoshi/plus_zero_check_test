@@ -7,7 +7,7 @@
 これらの4つの要素を用いて混同行列を表現する。  
 
 # 混同行列表記
-|       |        |>       |Predict |
+|       |        |            |Predict |
 |:------|:------:|:------:|-------:|
 |       |        |Positive|Negative|
 |truth  |Positive|TP      |FN      |
