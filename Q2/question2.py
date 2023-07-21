@@ -27,7 +27,7 @@ setosa_avg = np.full(50,np.average(y_pred[:50]))
 versicolor_avg = np.full(50, np.average(y_pred[50:100]))
 virginica_avg=np.full(50, np.average(y_pred[100:]))
 y_label = np.hstack((setosa_avg,versicolor_avg,virginica_avg))
-
-correct_count = np.sum(y_pred >= y_label)
+y_result = y_pred >= y_label
+correct_count = np.sum(y_result)
 accuracy = correct_count / y.shape[0]
 
