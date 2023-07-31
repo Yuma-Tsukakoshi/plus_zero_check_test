@@ -19,18 +19,17 @@ print(device)
 
 data_root = './data'
 
-# 前処理
+# 前処理 =================================================
 # 1. データをテンソルに変換 ToTensor
-# 2. 正規化する　Normalize
+# 2. 正規化する normalize 平均、標準偏差 0.5 0.5
+# 3. view テンソルの形状を変更する⇒スカラー化
 transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(0.5, 0.5),
-    # view: tensorを別のtensorに変換 つじつま合わせ 平滑化
     transforms.Lambda(lambda x: x.view(-1)),
 ])
 
 # dataの呼び出し
-
 # train True : 訓練用のデータセット = 6万件
 train_set = datasets.MNIST(
     root=data_root,
@@ -39,7 +38,7 @@ train_set = datasets.MNIST(
     transform=transform
 )
 
-# test False : 検証用集合を取得  = 1万件
+# train False : 検証用集合を取得  = 1万件
 test_set = datasets.MNIST(
     root=data_root,
     train=False,
@@ -47,39 +46,40 @@ test_set = datasets.MNIST(
     transform=transform
 )
 
-# dataの確認
+'''
+# 初めのdata確認
 image, label = train_set[0]
 print(len(train_set))
-print('Image tyoe', type(image))
+print('Image type', type(image))
 print('Image shape', image.shape)
 
 image, label = test_set[0]
 print(len(test_set))
-print('Image tyoe', type(image))
-# print('Image shape',image.shape)
+print('Image type', type(image))
+print('Image shape',image.shape)
+'''
 
 # ミニバッチ処置
-
 batch_size = 500
-# data_set , batch_size , shuffle
-
+# DataLoaderを使う理由：データセットをミニバッチに分割してくれる
+# data_set , batch_size , shuffleの引数取る
 train_loader = DataLoader(
     train_set,
     batch_size=batch_size,
     shuffle=True
 )
+
 test_loader = DataLoader(
     test_set,
     batch_size=batch_size,
     shuffle=True
 )
 
-# モデルの構築
-n_input = 784
+#モデルの構築=================================================
+n_input = 784 # 28*28
 n_output = 10
 n_hidden1 = 256
 n_hidden2 = 128
-
 
 class Net(nn.Module):
   def __init__(self, n_input, n_output, n_hidden1, n_hidden2):
@@ -104,17 +104,17 @@ net = Net(n_input,n_output,n_hidden1,n_hidden2).to(device)
 
 # 損失関数
 criterion = nn.CrossEntropyLoss()
-
+# 学習率
 lr = 0.5
+
 #重みの更新にはモデルのパラメーターが必要
 #最適アルゴリズム(確率的勾配降下法)
 optimizer = optim.SGD(net.parameters(),lr)
 
+# TODO historyの意味について
 history = np.zeros((0, 5))
-history
 
 # 学習
-
 num_epoch = 20
 for epoch in range(num_epoch):
   train_acc, train_loss = 0, 0
@@ -167,6 +167,12 @@ for epoch in range(num_epoch):
 print(f'初期状態: 損失:  {history[0,3]:.5f} 精度: {history[0,4]:.5f}')
 print(f'最終状態: 損失:  {history[-1,3]:.5f} 精度: {history[-1,4]:.5f}')
 
+
+#TODO 正解率をprintする
+
+'''
+学習曲線、損失曲線
+
 plt.rcParams['figure.figsize'] = (8, 6)
 plt.plot(history[:, 0], history[:, 1], 'b', label='train')
 plt.plot(history[:, 0], history[:, 3], 'k', label='test')
@@ -184,3 +190,4 @@ plt.ylabel('acc')
 plt.title('accuracy')
 plt.legend()
 plt.show()
+'''
