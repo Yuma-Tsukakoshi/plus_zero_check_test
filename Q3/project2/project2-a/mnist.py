@@ -111,10 +111,10 @@ lr = 0.5
 #最適アルゴリズム(確率的勾配降下法)
 optimizer = optim.SGD(net.parameters(),lr)
 
-# TODO historyの意味について
+# history : epochごとの損失と精度を記録する
 history = np.zeros((0, 5))
 
-# 学習
+# 学習======================================================
 num_epoch = 20
 for epoch in range(num_epoch):
   train_acc, train_loss = 0, 0
@@ -130,9 +130,11 @@ for epoch in range(num_epoch):
     # 順伝播関数を行っている
     outputs = net(inputs)
     loss = criterion(outputs, labels)
+    #勾配の計算
     loss.backward()
-
+    #重みの更新
     optimizer.step()
+    #出力から確率が一番高いラベルを予測値のラベルを取得
     predicted = torch.max(outputs, 1)[1]
 
     # テンソルを整数型に変換
@@ -151,7 +153,6 @@ for epoch in range(num_epoch):
 
     predicted_test = torch.max(outputs_test, 1)[1]
 
-    # テンソルを整数型に変換
     val_loss += loss_test.item()
     val_acc += (predicted_test == labels_test).sum().item()
 
@@ -164,30 +165,6 @@ for epoch in range(num_epoch):
   items = np.array([epoch+1, train_loss, train_acc, val_loss, val_acc])
   history = np.vstack((history, items))
 
+#history[row:epoch, column:(loss,acc,val_loss,val_acc))]
 print(f'初期状態: 損失:  {history[0,3]:.5f} 精度: {history[0,4]:.5f}')
 print(f'最終状態: 損失:  {history[-1,3]:.5f} 精度: {history[-1,4]:.5f}')
-
-
-#TODO 正解率をprintする
-
-'''
-学習曲線、損失曲線
-
-plt.rcParams['figure.figsize'] = (8, 6)
-plt.plot(history[:, 0], history[:, 1], 'b', label='train')
-plt.plot(history[:, 0], history[:, 3], 'k', label='test')
-plt.xlabel('iter')
-plt.ylabel('loss')
-plt.title('loss carve')
-plt.legend()
-plt.show()
-
-plt.rcParams['figure.figsize'] = (8, 6)
-plt.plot(history[:, 0], history[:, 2], 'b', label='train')
-plt.plot(history[:, 0], history[:, 4], 'k', label='test')
-plt.xlabel('iter')
-plt.ylabel('acc')
-plt.title('accuracy')
-plt.legend()
-plt.show()
-'''
