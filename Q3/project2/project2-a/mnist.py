@@ -1,5 +1,5 @@
 '''
-colaboで実装したコードを以下に貼り付けています。
+GPUの都合上, colaboで実装したコードを以下に貼り付けています。
 '''
 #ライブラリのインポート
 from tqdm.notebook import tqdm
